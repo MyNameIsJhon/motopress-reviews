@@ -1,0 +1,15 @@
+.wrap {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-table th {
+    width: 200px;
+}
+
+.cc-color-field {
+    width: 100px;
+}
