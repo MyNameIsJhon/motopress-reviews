@@ -197,6 +197,14 @@ function cc_display_reviews($atts) {
             <span id="cc-popup-close">&times;</span>
             <div id="cc-popup-left">
                 <?php echo do_shortcode('[cc_rating_widget]'); ?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="cleanliness"]');?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="accuracy"]');?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="checkin"]');?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="communication"]');?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="location"]');?>
+                <?php echo do_shortcode('[cc_average_rating_inline field="value"]');?>
+
+
                
             </div>
             <div id="cc-popup-right">
@@ -414,5 +422,40 @@ function cc_display_average_rating($atts) {
     return '';
 }
 add_shortcode('cc_average_rating', 'cc_display_average_rating');
+
+
+function cc_average_rating_inline($field) {
+    global $wpdb;
+    $average = $wpdb->get_var($wpdb->prepare(
+        "SELECT AVG(CAST(meta_value AS UNSIGNED)) FROM $wpdb->postmeta WHERE meta_key = %s",
+        '_booking_' . $field
+    ));
+    return round($average, 1);
+}
+
+
+function cc_display_average_rating_inline($atts) {
+    $atts = shortcode_atts(array(
+        'field' => 'cleanliness',
+    ), $atts, 'cc_average_rating_inline');
+
+    // Tableau associatif pour mapper les champs à leurs valeurs textuelles et icônes Font Awesome
+    $field_data = array(
+        'cleanliness' => array('label' => 'Cleanliness', 'icon' => 'fa-sharp fa-thin fa-hand-sparkles fa-2xl'),
+        'accuracy' => array('label' => 'Accuracy', 'icon' => 'fa-thin fa-circle-check fa-2xl'),
+        'checkin' => array('label' => 'Check-in', 'icon' => 'fa-thin fa-key fa-2xl'),
+        'communication' => array('label' => 'Communication', 'icon' => 'fa-thin fa-message fa-2xl'),
+        'location' => array('label' => 'Location', 'icon' => 'fa-thin fa-map fa-2xl'),
+        'value' => array('label' => 'Value', 'icon' => 'fa-thin fa-tag fa-2xl')
+    );
+
+    if (array_key_exists($atts['field'], $field_data)) {
+        $field_label = $field_data[$atts['field']]['label'];
+        $field_icon = $field_data[$atts['field']]['icon'];
+        return "<div class='inline-quotation-block'><div class='inline-quotation-text-log'><i class='".$field_icon."'></i><h6 style='font-weight:600; margin-bottom:0;'>". $field_label . "</h6></div><h5 style='margin-bottom:0;'>" . cc_average_rating($atts['field']) . "</5> </div> " ;
+    }
+    return '';
+}
+add_shortcode('cc_average_rating_inline', 'cc_display_average_rating_inline');
 
 ?>

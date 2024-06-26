@@ -380,3 +380,22 @@ body {
     text-align: center;
   }
 }
+
+.inline-quotation-block {
+  display: flex;
+  /* align-content: space-between; */
+  justify-content: space-between;
+}
+
+.inline-quotation-text-log {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.inline-quotation-block {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(200, 200, 200);
+}
