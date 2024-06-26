@@ -27,3 +27,4 @@ Use the following shortcodes to display different elements:
 - `[cc_reviews count="5"]`: Displays the reviews with pagination. Change the `count` attribute to the number of reviews per page.
 - `[cc_rating_widget]`: Displays the overall rating widget.
 - `[cc_average_rating field="cleanliness"]`: Displays the average rating for a specific field. Replace "cleanliness" with the desired field (cleanliness, accuracy, checkin, communication, location, value).
+

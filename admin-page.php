@@ -85,5 +85,57 @@ function cc_comments_management_page() {
     </div>
     <?php
 }
+function cc_clean_plugin_database() {
+    global $wpdb;
+
+    // Delete all reviews and their meta
+    $reviews = $wpdb->get_results("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'cc_review'");
+    foreach ($reviews as $review) {
+        wp_delete_post($review->ID, true);
+    }
+
+    // Delete all related post meta
+    $wpdb->query("DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_booking_%'");
+
+    // Display admin notice
+    add_action('admin_notices', function() {
+        echo '<div class="notice notice-success is-dismissible"><p>' . __('Plugin database cleaned successfully.', 'custom-comments') . '</p></div>';
+    });
+}
+
+// Add clean database button to the admin page
+function cc_add_clean_db_button() {
+    ?>
+    <div class="wrap">
+        <h1><?php _e('Custom Comments Settings', 'custom-comments'); ?></h1>
+        <form method="post" action="">
+            <?php
+            if (isset($_POST['cc_clean_db'])) {
+                cc_clean_plugin_database();
+            }
+            ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row"><?php _e('Clean Database', 'custom-comments'); ?></th>
+                    <td>
+                        <button type="submit" name="cc_clean_db" class="button button-secondary"><?php _e('Clean Database', 'custom-comments'); ?></button>
+                        <p class="description"><?php _e('This will delete all reviews and their associated metadata.', 'custom-comments'); ?></p>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <?php
+}
+add_action('admin_menu', function() {
+    add_submenu_page(
+        'cc-comments-management',
+        __('Settings', 'custom-comments'),
+        __('Settings', 'custom-comments'),
+        'manage_options',
+        'cc-settings',
+        'cc_add_clean_db_button'
+    );
+});
 
 ?>
